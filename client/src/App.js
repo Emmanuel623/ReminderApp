@@ -5,7 +5,7 @@ function App() {
 
   // Fetching message from backend on mount
   useEffect(() => {
-    fetch("https://reminderapp-laoh.onrender.com/")
+    fetch("https://reminderapp-backend.onrender.com/")
       .then((res) => res.json())
       .then((data) => setMessage(data.message));
   }, []);
