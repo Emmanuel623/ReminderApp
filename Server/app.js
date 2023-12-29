@@ -1,6 +1,7 @@
 // const bodyparser = require('body-parser');
 // const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const { router } = require('./routes/routes')
 const mongoose = require('mongoose');
 require("dotenv").config();
 
@@ -13,6 +14,8 @@ const app = express();
 //app.use(bodyparser.json());
 app.use(express.json())
 app.use(cors());
+
+app.use('/', router);
 
 //mongoose connection
 mongoose.connect(process.env.Mongodb_uri).then(() => {
@@ -28,9 +31,9 @@ mongoose.connect(process.env.Mongodb_uri).then(() => {
 //     next();
 // });
 
-app.get('/', (req, res) => {
-    res.json({ message: "succesful connection" });
-});
+// app.get('/', (req, res) => {
+//     res.json({ message: "succesful connection" });
+// });
 
 
 
