@@ -33,11 +33,18 @@ router.get('/api/reminders', findAllReminders);
 //finding reminder by id
 router.get('/api/reminders/:bookingId', findRemindersForBooking);
 
+//changing schedule
+router.put('/api/reschedule/:bookingId', rescheduleBooking);
 
-// router.get('/api/booking-details', service.rescheduleBooking);
-// router.get('/api/booking-details', service.cancelBooking);
-// router.get('/api/booking-details', service.updateNumberOfReminders);
-// router.get('/api/booking-details', service.completeAppointment);
+//cancelling booking 
+router.delete('/api/cancel/:bookingId', cancelBooking);
+
+//update reminder sent when a reminder is succesfully sent
+router.put('/api/reminders/:bookingId', updateNumberOfReminders);
+
+//after apointmnet complete change appointmeents
+router.put('/api/booking-details/:bookingId', completeAppointment);
+
 
 
 module.exports = { router };

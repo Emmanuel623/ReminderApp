@@ -142,7 +142,6 @@ exports.rescheduleBooking = async (req, res) => {
 //canceling booking
 exports.cancelBooking = async (req, res) => {
     const { bookingId } = req.params;
-
     try {
         // Update booking details
         const updatedBooking = await BookingDetails.findOneAndUpdate(
@@ -163,7 +162,7 @@ exports.cancelBooking = async (req, res) => {
         const removedReminder = await Reminder.findOneAndDelete({ bookingId });
 
         if (!removedReminder) {
-            // Handle if there is no reminder for the booking (optional)
+            return res.status(404).json({ message: `Booking with ID ${bookingId} not found.` });
         }
 
         return res.status(200).json({ updatedBooking, removedReminder });
