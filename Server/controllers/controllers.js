@@ -135,7 +135,7 @@ exports.rescheduleBooking = async (req, res, next) => {
             todoc: updatedBooking.doctorEmail,
             tocon: updatedBooking.bookedServicesData[0].customerEmail,
             subject: 'Appointment Rescheduled',
-            text: `Appointment with Booking ID ${bookingId} has been rescheduled. The new meeting time is ${selectedDateTime}.`,
+            text: `Hi there this mail is to Appointment with Booking ID ${bookingId} has been rescheduled. The new meeting time is ${selectedDateTime}.`,
         };
         next();
     } catch (error) {
@@ -176,7 +176,7 @@ exports.cancelBooking = async (req, res, next) => {
             todoc: updatedBooking.doctorEmail,
             tocon: updatedBooking.bookedServicesData[0].customerEmail,
             subject: 'Booking Cancelled',
-            text: `Appointment with Booking ID ${bookingId} has been cancelled.`,
+            text: `Hi there this mail is to inform that Appointment with Booking ID ${bookingId} has been cancelled.`,
         };
         next();
     } catch (error) {
@@ -248,8 +248,9 @@ exports.completeAppointment = async (req, res, next) => {
         req.completedappointment = {
             todoc: updatedBooking.doctorEmail,
             tocon: updatedBooking.bookedServicesData[0].customerEmail,
-            subject: 'Sucessfully completed appointment',
-            text: `Appointment with Booking ID ${bookingId} has been successfully completed.`,
+            subject: 'Completed Appointment',
+            text: `Hi there this mail is to informyou that 
+            Appointment with Booking ID ${bookingId} has been successfully completed.`,
         };
         next();
     } catch (error) {
@@ -322,8 +323,9 @@ exports.newAppointment = async (req, res, next) => {
         req.appointmentDataForEmail = {
             todoc: doctorEmail,
             tocon: createdCustomerEmail, // Replace with the recipient's email
-            subject: 'Sucessfully booked appointment',
-            text: `Appointment with Booking ID ${createdBookingId} has been successfully booked.`,
+            subject: 'Booked Appointment',
+            text: `Hi there this is to inform that
+            Appointment with Booking ID ${createdBookingId} has been successfully booked.`,
         };
         next();
     } catch (error) {

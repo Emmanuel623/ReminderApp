@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import logo from './logo.svg';
 import './App.css';
 import { MdClose } from "react-icons/md"
 import axios, { AxiosError } from "axios"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { parseISO, format } from 'date-fns';
 
 axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
 //axios.defaults.baseURL = "http://localhost:8080";

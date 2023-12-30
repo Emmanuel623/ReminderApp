@@ -24,7 +24,7 @@ exports.newAppointmentmail = async (req, res) => {
             }
             console.log('Email sent:', info.response);
         });
-        res.json({ message: 'Added appointment and Email sent successfully' });
+        res.json({ message: 'Appointment  Added also Email sent to both doctor and patient' });
     } catch (error) {
         console.error('Error sending email:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -47,7 +47,7 @@ exports.completed = async (req, res) => {
             }
             console.log('Email sent:', info.response);
         });
-        res.json({ message: 'completed appointment and Email sent successfully' });
+        res.json({ message: 'Appointment  Completed also Email sent to both doctor and patient' });
     } catch (error) {
         console.error('Error sending email:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -70,7 +70,7 @@ exports.cancelled = async (req, res) => {
             }
             console.log('Email sent:', info.response);
         });
-        res.json({ message: 'cancelled appointment and Email sent successfully' });
+        res.json({ message: 'Appointment  Cancelled also Email sent to both doctor and patient' });
     } catch (error) {
         console.error('Error sending email:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -93,7 +93,7 @@ exports.rescheduled = async (req, res) => {
             }
             console.log('Email sent:', info.response);
         });
-        res.json({ message: 'Appointment rescheduled and Email sent successfully' });
+        res.json({ message: 'Appointment  Rescheduled also Email sent to both doctor and patient' });
     } catch (error) {
         console.error('Error sending email:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
