@@ -5,7 +5,7 @@ import { MdClose } from "react-icons/md"
 import axios, { AxiosError } from "axios"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { format } from 'date-fns';
+import { parseISO, format } from 'date-fns';
 
 axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
 //axios.defaults.baseURL = "http://localhost:8080";
@@ -24,14 +24,13 @@ function App() {
 
     //date
     const [selectedDateTime, setSelectedDateTime] = useState(null);
-    //console.log(selectedDateTime)
+
 
     //retrived data usestates
     const [dataList, setDataList] = useState([]);
     const [doctorsData, setDoctorsData] = useState([]);
     const [customersData, setCustomersData] = useState([]);
     const [remindersData, setRemindersData] = useState([]);
-    //const [reminderData, setReminderData] = useState([]);
     const [bookingData, setBookingData] = useState([]);
 
     //submit and changing functions 
@@ -46,46 +45,39 @@ function App() {
 
         try {
             const response = await axios.post('/api/booking-details', data);
-
-            if (response.status === 201) {
-                alert('Appointment added successfully');
-            } else {
-                alert('Failed to add appointment');
-            }
+            alert(response.data.message)
         } catch (error) {
             console.error('Error:', error);
         }
     };
 
+
+
     const handleDateChange = (date) => {
-        // Format the date as per the desired format
-        const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-
-        setSelectedDateTime(date);
-    };
-    const handlechange = async (e, id) => {
-        e.preventDefault();
-
-        const formData = new FormData(e.target);
-
-        // Add the formatted date to the form data
-        formData.set('selectedDateTime', format(selectedDateTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
-
         try {
-            const response = await axios.put(`/api/reschedule/${id}`, formData);
-
-            if (response.status === 201) {
-                alert('Appointment rescheduled successfully');
-                // Optionally, you can reset the form or perform any other action upon successful submission
-                // e.target.reset();
+            if (date instanceof Date && !isNaN(date)) {
+                setSelectedDateTime(date);
             } else {
-                alert('Failed to reschedule appointment');
+                console.error('Invalid date:', date);
             }
         } catch (error) {
-            alert('Error:', error);
+            console.error('Error handling date change:', error);
         }
     };
 
+    const handlechange = async (e, id) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.put(`/api/reschedule/${id}`, {
+                selectedDateTime: selectedDateTime.toISOString(),
+            });
+            alert(response.data.message)
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error:', error);
+        }
+    };
 
     //functions to be called for fetching data in
     const Getdoctors = async () => {
@@ -153,11 +145,7 @@ function App() {
     const Success = async (bookingId) => {
         try {
             const response = await axios.put(`/api/booking-details/${bookingId}`);
-            if (response.status === 200) {
-                alert('Appointment completed successfully');
-            } else {
-                alert('Failed to complete appointment');
-            }
+            alert(response.data.message)
         } catch (error) {
             console.error('Error:', error);
         }
@@ -165,11 +153,7 @@ function App() {
     const Canceled = async (bookingId) => {
         try {
             const response = await axios.delete(`/api/cancel/${bookingId}`);
-            if (response.status === 200) {
-                alert('Appointment completed successfully');
-            } else {
-                alert('Failed to complete appointment');
-            }
+            alert(response.data.message)
         } catch (error) {
             console.error('Error:', error);
         }
@@ -216,16 +200,7 @@ function App() {
         setviewSection(false)
         setEditSection(false);
     }
-    // function closeeditclick() {
-    //     setAddSection(true);
-    //     setBooking(false);
-    //     setDoctor(false);
-    //     setCustomer(false);
-    //     setReminder(false);
-    //     setRemind(false);
-    //     setviewSection(false);
-    //     setEditSection(false);
-    // }
+
     function bookingclick() {
         setAddSection(false);
         setBooking(true);
@@ -346,7 +321,7 @@ function App() {
                                     showTimeSelect
                                     timeFormat="HH:mm"
                                     timeIntervals={15}
-                                    dateFormat="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                                    dateFormat="yyyy-MM-dd HH:mm:ss"
                                     minDate={new Date()}
                                 />
                             </div>
@@ -589,7 +564,7 @@ function App() {
                                         showTimeSelect
                                         timeFormat="HH:mm"
                                         timeIntervals={15}
-                                        dateFormat="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                                        dateFormat="yyyy-MM-dd HH:mm:ss"
                                         minDate={new Date()}
                                     />
                                 </div>

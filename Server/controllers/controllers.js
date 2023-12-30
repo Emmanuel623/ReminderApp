@@ -92,11 +92,11 @@ exports.findRemindersForBooking = async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-
 //change booking time
-exports.rescheduleBooking = async (req, res) => {
+exports.rescheduleBooking = async (req, res, next) => {
     const { bookingId } = req.params;
-    const { newMeetingStartTime } = req.body;
+    const { selectedDateTime } = req.body;
+    //console.log(req.body)
 
     try {
         // Update booking details
@@ -104,7 +104,7 @@ exports.rescheduleBooking = async (req, res) => {
             { 'bookedServicesData.bookingId': bookingId },
             {
                 $set: {
-                    'bookedServicesData.$.meetingStartTime': newMeetingStartTime,
+                    'bookedServicesData.$.meetingStartTime': selectedDateTime,
                     'bookedServicesData.$.isRescheduled': true,
                     // 'bookedServicesData.$.rescheduledBy': rescheduledBy,
                 },
@@ -121,27 +121,34 @@ exports.rescheduleBooking = async (req, res) => {
             { bookingId },
             {
                 $set: {
-                    BookingTime: newMeetingStartTime,
+                    BookingTime: selectedDateTime,
                 },
             },
             { new: true }
         );
 
         if (!updatedReminder) {
-            return res.status(404).json({ message: `Booking with ID ${bookingId} yes not found.` });
+            return res.status(404).json({ message: `Booking with ID ${bookingId} not found.` });
         }
 
-        return res.status(200).json({ updatedBooking, updatedReminder });
+        req.rescheduledappointment = {
+            todoc: updatedBooking.doctorEmail,
+            tocon: updatedBooking.bookedServicesData[0].customerEmail,
+            subject: 'Appointment Rescheduled',
+            text: `Appointment with Booking ID ${bookingId} has been rescheduled. The new meeting time is ${selectedDateTime}.`,
+        };
+        next();
     } catch (error) {
         console.error('Error rescheduling booking:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+};
 
 
 //canceling booking
-exports.cancelBooking = async (req, res) => {
+exports.cancelBooking = async (req, res, next) => {
     const { bookingId } = req.params;
+
     try {
         // Update booking details
         const updatedBooking = await BookingDetails.findOneAndUpdate(
@@ -165,12 +172,19 @@ exports.cancelBooking = async (req, res) => {
             return res.status(404).json({ message: `Booking with ID ${bookingId} not found.` });
         }
 
-        return res.status(200).json({ updatedBooking, removedReminder });
+        req.cancelledappointment = {
+            todoc: updatedBooking.doctorEmail,
+            tocon: updatedBooking.bookedServicesData[0].customerEmail,
+            subject: 'Booking Cancelled',
+            text: `Appointment with Booking ID ${bookingId} has been cancelled.`,
+        };
+        next();
     } catch (error) {
-        console.error('Error canceling booking:', error);
+        console.error('Error cancelling booking:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+};
+
 
 
 //update reminder sent number of time 
@@ -202,8 +216,7 @@ exports.updateNumberOfReminders = async (req, res) => {
 
 
 //sucess meeting
-
-exports.completeAppointment = async (req, res) => {
+exports.completeAppointment = async (req, res, next) => {
     const { bookingId } = req.params;
 
     try {
@@ -232,14 +245,20 @@ exports.completeAppointment = async (req, res) => {
             return res.status(404).json({ message: `Booking with ID ${bookingId} not found.` });
         }
 
-        return res.status(200).json({ deletedReminder, updatedBooking });
+        req.completedappointment = {
+            todoc: updatedBooking.doctorEmail,
+            tocon: updatedBooking.bookedServicesData[0].customerEmail,
+            subject: 'Sucessfully completed appointment',
+            text: `Appointment with Booking ID ${bookingId} has been successfully completed.`,
+        };
+        next();
     } catch (error) {
         console.error('Error completing appointment:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+};
 
-exports.newAppointment = async (req, res) => {
+exports.newAppointment = async (req, res, next) => {
     try {
         const {
             usernameDoctor,
@@ -300,12 +319,13 @@ exports.newAppointment = async (req, res) => {
         };
 
         await Reminder.create(newReminderData);
-
-        return res.status(201).json({
-            message: 'Appointment and reminder created successfully',
-            appointment: createdAppointment,
-            reminder: newReminderData,
-        });
+        req.appointmentDataForEmail = {
+            todoc: doctorEmail,
+            tocon: createdCustomerEmail, // Replace with the recipient's email
+            subject: 'Sucessfully booked appointment',
+            text: `Appointment with Booking ID ${createdBookingId} has been successfully booked.`,
+        };
+        next();
     } catch (error) {
         console.error('Error creating new appointment and reminder:', error);
         return res.status(500).json({ error: 'Internal Server Error' });

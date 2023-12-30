@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { newAppointmentmail, completed, cancelled, rescheduled } = require('../middleware/middleware')
 
 const { findAllDetails,
     findDetailsById,
@@ -35,19 +36,19 @@ router.get('/api/reminders', findAllReminders);//working
 router.get('/api/reminders/:bookingId', findRemindersForBooking);//working
 
 //changing schedule
-router.put('/api/reschedule/:bookingId', rescheduleBooking);//working
+router.put('/api/reschedule/:bookingId', rescheduleBooking, rescheduled);//working
 
 //cancelling booking 
-router.delete('/api/cancel/:bookingId', cancelBooking);//working
+router.delete('/api/cancel/:bookingId', cancelBooking, cancelled);//working
 
 //update reminder sent when a reminder is succesfully sent
 router.put('/api/reminders/:bookingId', updateNumberOfReminders);//working
 
 //after apointmnet complete change appointmeents
-router.put('/api/booking-details/:bookingId', completeAppointment);//working
+router.put('/api/booking-details/:bookingId', completeAppointment, completed);//working
 
 //creating new appointment
-router.post('/api/booking-details', newAppointment);//working
+router.post('/api/booking-details', newAppointment, newAppointmentmail);//working
 
 
 

@@ -19,7 +19,7 @@ app.use('/', router);
 mongoose.connect(process.env.Mongodb_uri).then(() => {
     const port = process.env.port;
     app.listen(port, () => {
-        console.log("server running on port http://localhost:8080");
+        console.log("server is running");
     });
 });
 

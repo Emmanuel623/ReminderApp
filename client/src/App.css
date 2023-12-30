@@ -25,6 +25,7 @@ body {
   background-color: rgb(37, 35, 35);
   max-width: 75%;
   margin: 10% auto;
+  overflow-y: auto;
 }
 
 .btn {
