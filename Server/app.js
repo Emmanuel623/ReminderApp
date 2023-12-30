@@ -1,5 +1,3 @@
-// const bodyparser = require('body-parser');
-// const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { router } = require('./routes/routes')
 const mongoose = require('mongoose');
@@ -8,10 +6,10 @@ require("dotenv").config();
 const express = require('express');
 const app = express();
 
+// Define your formDataParser middleware
+
 
 //middleware
-//app.use(cookieParser());
-//app.use(bodyparser.json());
 app.use(express.json())
 app.use(cors());
 
@@ -25,15 +23,6 @@ mongoose.connect(process.env.Mongodb_uri).then(() => {
     });
 });
 
-//type of request and url
-// app.use((req, res, next) => {
-//     console.log(`Received ${req.method} request for ${req.url}`);
-//     next();
-// });
-
-// app.get('/', (req, res) => {
-//     res.json({ message: "succesful connection" });
-// });
 
 
 

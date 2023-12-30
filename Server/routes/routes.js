@@ -10,7 +10,8 @@ const { findAllDetails,
     rescheduleBooking,
     cancelBooking,
     updateNumberOfReminders,
-    completeAppointment } = require('../controllers/controllers')
+    completeAppointment,
+    newAppointment } = require('../controllers/controllers')
 
 
 
@@ -28,22 +29,26 @@ router.get('/api/customers', findAllCustomers);//working
 router.get('/api/doctors', findAllDoctors);//working
 
 //finding all reminder 
-router.get('/api/reminders', findAllReminders);
+router.get('/api/reminders', findAllReminders);//working
 
 //finding reminder by id
-router.get('/api/reminders/:bookingId', findRemindersForBooking);
+router.get('/api/reminders/:bookingId', findRemindersForBooking);//working
 
 //changing schedule
-router.put('/api/reschedule/:bookingId', rescheduleBooking);
+router.put('/api/reschedule/:bookingId', rescheduleBooking);//working
 
 //cancelling booking 
-router.delete('/api/cancel/:bookingId', cancelBooking);
+router.delete('/api/cancel/:bookingId', cancelBooking);//working
 
 //update reminder sent when a reminder is succesfully sent
-router.put('/api/reminders/:bookingId', updateNumberOfReminders);
+router.put('/api/reminders/:bookingId', updateNumberOfReminders);//working
 
 //after apointmnet complete change appointmeents
-router.put('/api/booking-details/:bookingId', completeAppointment);
+router.put('/api/booking-details/:bookingId', completeAppointment);//working
+
+//creating new appointment
+router.post('/api/booking-details', newAppointment);//working
+
 
 
 

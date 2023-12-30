@@ -1,0 +1,86 @@
+[
+    {
+        "usernameDoctor": "Dr. Smith",
+        "accId": "A123",
+        "doctorEmail": "dr.smith@example.com",
+        "doctorTimezone": "GMT",
+        "bookedServicesData": [
+            {
+                "bookingId": "B001",
+                "orderId": "O001",
+                "customerEmail": "john.doe@example.com",
+                "customerPhoneNumber": "1234567890",
+                "customerName": "John Doe",
+                "serviceTitle": "Eye Treatment",
+                "transactionId": "T001",
+                "isRescheduled": false,
+                "isCancelled": false,
+                "numberOfReschedules": {
+                    "$numberInt": "0"
+                },
+                "rescheduledBy": "consumer",
+                "transactionStatus": "pending",
+                "bookingStatus": "pending",
+                "meetingStartTime": "pending",
+                "meetingEndTime": "pending",
+                "datetime": "2023-12-30T08:00:00.000Z",
+                "customerTimezone": "GMT",
+                "location": "USA Miami FL",
+                "correlationId": "C001"
+            }
+        ]
+    },
+    {
+        "usernameDoctor": "Dr. Johnson",
+        "accId": "A124",
+        "doctorEmail": "dr.johnson@example.com",
+        "doctorTimezone": "EST",
+        "bookedServicesData": [
+            {
+                "bookingId": "B002",
+                "orderId": "O002",
+                "customerEmail": "jane.smith@example.com",
+                "customerPhoneNumber": "9876543210",
+                "customerName": "Jane Smith",
+                "serviceTitle": "Dental Checkup",
+                "transactionId": "T002",
+                "isRescheduled": true,
+                "isCancelled": true,
+                "numberOfReschedules": {
+                    "$numberInt": "0"
+                },
+                "rescheduledBy": "doctor",
+                "transactionStatus": "pending",
+                "bookingStatus": "pending",
+                "meetingStartTime": "pending",
+                "meetingEndTime": "pending",
+                "datetime": "2023-12-30T09:00:00.000Z",
+                "customerTimezone": "EST",
+                "location": "USA Miami FL",
+                "correlationId": "C002"
+            }
+        ]
+    },
+    {
+        "bookingId": "B001",
+        "BookingTime": "2023-12-30T08:00:00.000Z",
+        "doctorEmail": "dr.smith@example.com",
+        "customerEmail": "john.doe@example.com",
+        "numberOfReminders": {
+            "$numberInt": "4"
+        },
+        "lastReminderSentTime": "2023-12-30T07:00:00.000Z",
+        "isReminderSuccessful": true
+    },
+    {
+        "bookingId": "B002",
+        "BookingTime": "2023-12-30T09:00:00.000Z",
+        "doctorEmail": "dr.johnson@example.com",
+        "customerEmail": "jane.smith@example.com",
+        "numberOfReminders": {
+            "$numberInt": "2"
+        },
+        "lastReminderSentTime": "2023-12-30T08:00:00.000Z",
+        "isReminderSuccessful": true
+    }
+]

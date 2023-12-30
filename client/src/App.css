@@ -137,3 +137,38 @@ body {
     /* Add some bottom margin for better spacing */
   }
 }
+
+.date-picker-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Apply different styles for screens with a max-width of 768 pixels */
+@media (max-width: 768px) {
+  .date-picker-container {
+    flex-direction: column;
+    /* Stack items vertically */
+    align-items: flex-start;
+    /* Align items to the start of the container */
+    padding: 15px;
+    /* Add some padding for better spacing */
+    border: 1px solid #ccc;
+    /* Add a border for a neat appearance */
+    border-radius: 8px;
+    /* Add border radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Add a subtle box shadow for depth */
+  }
+
+  #selectedDateTime {
+    width: 100%;
+    /* Make the input field full width */
+    box-sizing: border-box;
+    /* Include padding and border in the width calculation */
+    overflow-x: auto;
+    /* Add horizontal scroll if content overflows */
+    max-width: 200px;
+    /* Set a maximum width to trigger overflow */
+  }
+}

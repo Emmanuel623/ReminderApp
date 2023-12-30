@@ -19,19 +19,11 @@ const bookingDetailsSchema = new mongoose.Schema({
         rescheduledBy: { type: String, default: null },
         transactionStatus: String,
         bookingStatus: { type: String, default: 'pending' },
-        meetingStartTime: String,
-        meetingEndTime: String,
-        date: {
-            day: Number,
-            month: String,
-            weekDay: String
-        },
+        meetingStartTime: { type: String, default: 'pending' },
+        meetingEndTime: { type: String, default: 'pending' },
+        datetime: String,
         customerTimezone: String,
-        location: {
-            country: String,
-            city: String,
-            state: String
-        },
+        location: String,
         correlationId: String
     }]
 });

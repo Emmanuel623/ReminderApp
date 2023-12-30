@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import logo from './logo.svg';
 import './App.css';
 import { MdClose } from "react-icons/md"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from 'date-fns';
 
-axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
+//axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
+axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
 
@@ -14,7 +18,13 @@ function App() {
     const [doctorsection, setDoctor] = useState(false);
     const [customersection, setCustomer] = useState(false);
     const [remindersection, setReminder] = useState(false);
+    const [remindsection, setRemind] = useState(false);
+    const [viewsection, setviewSection] = useState(false);
+    const [editsection, setEditSection] = useState(false);
 
+    //date
+    const [selectedDateTime, setSelectedDateTime] = useState(null);
+    //console.log(selectedDateTime)
 
     //retrived data usestates
     const [dataList, setDataList] = useState([]);
@@ -24,10 +34,57 @@ function App() {
     //const [reminderData, setReminderData] = useState([]);
     const [bookingData, setBookingData] = useState([]);
 
-
-    const handlesubmit = (e) => {
+    //submit and changing functions 
+    const handlesubmit = async (e) => {
         e.preventDefault();
-    }
+        const formData = new FormData(e.target);
+
+        let data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        try {
+            const response = await axios.post('/api/booking-details', data);
+
+            if (response.status === 201) {
+                alert('Appointment added successfully');
+            } else {
+                alert('Failed to add appointment');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const handleDateChange = (date) => {
+        // Format the date as per the desired format
+        const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+        setSelectedDateTime(date);
+    };
+    const handlechange = async (e, id) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+
+        // Add the formatted date to the form data
+        formData.set('selectedDateTime', format(selectedDateTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+
+        try {
+            const response = await axios.put(`/api/reschedule/${id}`, formData);
+
+            if (response.status === 201) {
+                alert('Appointment rescheduled successfully');
+                // Optionally, you can reset the form or perform any other action upon successful submission
+                // e.target.reset();
+            } else {
+                alert('Failed to reschedule appointment');
+            }
+        } catch (error) {
+            alert('Error:', error);
+        }
+    };
 
 
     //functions to be called for fetching data in
@@ -40,7 +97,6 @@ function App() {
         }
         catch (error) {
             console.error('Error fetching doctors:', error);
-            // Handle the error (e.g., show a user-friendly message)
         }
     }
     const Getcustumers = async () => {
@@ -56,7 +112,6 @@ function App() {
         }
         catch (error) {
             console.error('Error fetching customers:', error);
-            // Handle the error (e.g., show a user-friendly message)
         }
     }
     const Getreminders = async () => {
@@ -68,31 +123,18 @@ function App() {
         }
         catch (error) {
             console.error('Error fetching reminders:', error);
-            // Handle the error (e.g., show a user-friendly message)
         }
     }
-    // const Getreminder = async () => {
-    //     try {
-    //         const data = await axios.get(`/api/reminders/B001`);
-    //         if (data.status === 200) {
-    //             setReminderData(data.data);
-    //         }
-    //     }
-    //     catch (error) {
-    //         console.error('Error fetching reminder:', error);
-    //         // Handle the error (e.g., show a user-friendly message)
-    //     }
-    // };
-    const Getbooking = async () => {
+
+    const Getbooking = async (id) => {
         try {
-            const data = await axios.get(`/api/booking-details/B001`);
+            const data = await axios.get(`/api/booking-details/${id}`);
             if (data.status === 200) {
-                setBookingData(data.data);
+                setBookingData(data.data.bookingDetails);
             }
         }
         catch (error) {
             console.error('Error fetching booking:', error);
-            // Handle the error (e.g., show a user-friendly message)
         }
     }
     const Getbookings = async () => {
@@ -108,6 +150,30 @@ function App() {
         }
     }
 
+    const Success = async (bookingId) => {
+        try {
+            const response = await axios.put(`/api/booking-details/${bookingId}`);
+            if (response.status === 200) {
+                alert('Appointment completed successfully');
+            } else {
+                alert('Failed to complete appointment');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    const Canceled = async (bookingId) => {
+        try {
+            const response = await axios.delete(`/api/cancel/${bookingId}`);
+            if (response.status === 200) {
+                alert('Appointment completed successfully');
+            } else {
+                alert('Failed to complete appointment');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
 
     //useeffect for getting details
@@ -116,30 +182,59 @@ function App() {
         Getreminders();
         Getdoctors();
         Getcustumers();
-        //Getreminder();
-        Getbooking();
     }, [])
-    // console.log("it", dataList)
-    //console.log("it2", remindersData);
-    // console.log("it3", doctorsData)
-    //console.log("it4", customersData)
-    // console.log("it5", reminderData)
-    // console.log("it6", bookingData)
+
 
     //handling  hidding buttons onclick
+    async function veiwclick(id) {
+        await Getbooking(id);
+        setAddSection(false);
+        setBooking(false);
+        setDoctor(false);
+        setCustomer(false);
+        setReminder(false);
+        setRemind(true);
+        setEditSection(false);
+    }
+    async function reschedule(id) {
+        await Getbooking(id);
+        setAddSection(false);
+        setBooking(false);
+        setDoctor(false);
+        setCustomer(false);
+        setReminder(false);
+        setRemind(false);
+        setEditSection(true);
+    }
     function addclick() {
         setAddSection(true);
         setBooking(false);
         setDoctor(false);
         setCustomer(false);
         setReminder(false);
+        setRemind(false);
+        setviewSection(false)
+        setEditSection(false);
     }
+    // function closeeditclick() {
+    //     setAddSection(true);
+    //     setBooking(false);
+    //     setDoctor(false);
+    //     setCustomer(false);
+    //     setReminder(false);
+    //     setRemind(false);
+    //     setviewSection(false);
+    //     setEditSection(false);
+    // }
     function bookingclick() {
         setAddSection(false);
         setBooking(true);
         setDoctor(false);
         setCustomer(false);
         setReminder(false);
+        setRemind(false)
+        setviewSection(false)
+        setEditSection(false);
     }
     function doctorclick() {
         setAddSection(false);
@@ -147,6 +242,9 @@ function App() {
         setDoctor(true);
         setCustomer(false);
         setReminder(false);
+        setRemind(false)
+        setviewSection(false)
+        setEditSection(false);
     }
     function customerclick() {
         setAddSection(false);
@@ -154,6 +252,9 @@ function App() {
         setDoctor(false);
         setCustomer(true);
         setReminder(false);
+        setRemind(false)
+        setviewSection(false)
+        setEditSection(false);
     }
     function Reminderclick() {
         setAddSection(false);
@@ -161,8 +262,20 @@ function App() {
         setDoctor(false);
         setCustomer(false);
         setReminder(true);
+        setRemind(false)
+        setviewSection(false)
+        setEditSection(false);
     }
-
+    function closeviewclick() {
+        setAddSection(false);
+        setBooking(true);
+        setDoctor(false);
+        setCustomer(false);
+        setReminder(false);
+        setRemind(false);
+        setviewSection(false)
+        setEditSection(false);
+    }
 
     return (
         <>
@@ -223,26 +336,26 @@ function App() {
                             <label htmlFor="transactionId">Transaction ID:</label>
                             <input type="text" id="transactionId" name="transactionId" required />
 
-                            <label htmlFor="day">Day:</label>
-                            <input type="number" id="day" name="day" required />
-
-                            <label htmlFor="month">Month:</label>
-                            <input type="text" id="month" name="month" required />
-
-                            <label htmlFor="weekDay">Weekday:</label>
-                            <input type="text" id="weekDay" name="weekDay" required />
+                            <div className="date-picker-container">
+                                <label htmlFor="selectedDateTime">Select Date and Time:</label>
+                                <DatePicker
+                                    id="selectedDateTime"
+                                    name="selectedDateTime"
+                                    selected={selectedDateTime}
+                                    onChange={(date) => setSelectedDateTime(date)}
+                                    showTimeSelect
+                                    timeFormat="HH:mm"
+                                    timeIntervals={15}
+                                    dateFormat="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                                    minDate={new Date()}
+                                />
+                            </div>
 
                             <label htmlFor="customerTimezone">Customer Timezone:</label>
                             <input type="text" id="customerTimezone" name="customerTimezone" required />
 
-                            <label htmlFor="country">Country:</label>
-                            <input type="text" id="country" name="country" required />
-
-                            <label htmlFor="city">City:</label>
-                            <input type="text" id="city" name="city" required />
-
-                            <label htmlFor="state">State:</label>
-                            <input type="text" id="state" name="state" required />
+                            <label htmlFor="country">location:</label>
+                            <input type="text" id="location" name="location" required />
 
                             <label htmlFor="correlationId">Correlation ID:</label>
                             <input type="text" id="correlationId" name="correlationId" required />
@@ -272,6 +385,7 @@ function App() {
                                             <td>{ele.bookedServicesData[0].bookingStatus}</td>
                                             <td>{ele.usernameDoctor}</td>
                                             <td>{ele.bookedServicesData[0].customerName}</td>
+                                            <td><button className="btn" onClick={() => veiwclick(ele.bookedServicesData[0].bookingId)}>View More</button></td>
                                         </tr>
                                     )
                                 })}
@@ -352,6 +466,159 @@ function App() {
                             </tbody>
                         </table>
                     </div>)
+                }
+                {
+                    remindsection && (
+                        <>
+                            {(
+                                <div className="addcontainer" >
+                                    <form>
+                                        <div className="close-btn" onClick={() => closeviewclick()}><MdClose /></div>
+                                        <label htmlFor="bookingId">Booking ID:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].bookingId} name="bookingId" disabled />
+
+                                        <label htmlFor="orderId">Order ID:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].orderId} name="orderId" disabled />
+
+                                        <label htmlFor="usernameDoctor">Doctor Name:</label>
+                                        <input type="text" value={bookingData.usernameDoctor} name="usernameDoctor" disabled />
+
+                                        <label htmlFor="accId">Doctor ID:</label>
+                                        <input type="text" value={bookingData.accId} name="accId" disabled />
+
+                                        <label htmlFor="doctorEmail">Doctor Email:</label>
+                                        <input type="email" value={bookingData.doctorEmail} name="doctorEmail" disabled />
+
+                                        <label htmlFor="doctorTimezone">Doctor Timezone:</label>
+                                        <input type="text" value={bookingData.doctorTimezone} name="doctorTimezone" disabled />
+
+                                        <label htmlFor="customerEmail">Customer Email:</label>
+                                        <input type="email" value={bookingData.bookedServicesData[0].customerEmail} name="customerEmail" disabled />
+
+                                        <label htmlFor="customerPhoneNumber">Customer Phone:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].customerPhoneNumber} name="customerPhoneNumber" disabled />
+
+                                        <label htmlFor="customerName">Customer Name:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].customerName} name="customerName" disabled />
+
+                                        <label htmlFor="serviceTitle">Service Title:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].serviceTitle} name="serviceTitle" disabled />
+
+                                        <label htmlFor="transactionId">Transaction ID:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].transactionId} name="transactionId" disabled />
+
+                                        <label htmlFor="dateTime">Date and Time:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].datetime} name="dateTime" disabled />
+
+                                        <label htmlFor="customerTimezone">Customer Timezone:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].customerTimezone} name="customerTimezone" disabled />
+
+                                        <label htmlFor="location">location:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].location} name="location" disabled />
+
+                                        <label htmlFor="transactionStatus">Transaction Status:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].transactionStatus} name="transactionStatus" disabled />
+
+                                        <label htmlFor="bookingStatus">Booking Status:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].bookingStatus} name="bookingStatus" disabled />
+
+                                        <label htmlFor="meetingStartTime">Meeting Start:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].meetingStartTime} name="meetingStartTime" disabled />
+
+                                        <label htmlFor="meetingEndTime">Meeting EndTime:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].meetingEndTime} name="meetingEndTime" disabled />
+
+                                        <label htmlFor="correlationId">Correlation ID:</label>
+                                        <input type="text" value={bookingData.bookedServicesData[0].correlationId} name="correlationId" disabled />
+
+                                        <div className="btn" onClick={() => reschedule(bookingData.bookedServicesData[0].bookingId)}>Reschedule</div>
+                                        <div className="btn" onClick={() => Success(bookingData.bookedServicesData[0].bookingId)}>success</div>
+                                        <div className="btn" onClick={() => Canceled(bookingData.bookedServicesData[0].bookingId)}>Cancel</div>
+                                    </form>
+                                </div>
+                            )
+                            }
+                        </>
+                    )
+                }
+                {
+                    editsection && (
+                        <div className="addcontainer">
+                            <form onSubmit={(e) => handlechange(e, bookingData.bookedServicesData[0].bookingId)}>
+                                <div className="close-btn" onClick={() => setEditSection(false)}><MdClose /></div>
+                                <label htmlFor="bookingId">Booking ID:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].bookingId} name="bookingId" disabled />
+
+                                <label htmlFor="orderId">Order ID:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].orderId} name="orderId" disabled />
+
+                                <label htmlFor="usernameDoctor">Doctor Name:</label>
+                                <input type="text" value={bookingData.usernameDoctor} name="usernameDoctor" disabled />
+
+                                <label htmlFor="accId">Doctor ID:</label>
+                                <input type="text" value={bookingData.accId} name="accId" disabled />
+
+                                <label htmlFor="doctorEmail">Doctor Email:</label>
+                                <input type="email" value={bookingData.doctorEmail} name="doctorEmail" disabled />
+
+                                <label htmlFor="doctorTimezone">Doctor Timezone:</label>
+                                <input type="text" value={bookingData.doctorTimezone} name="doctorTimezone" disabled />
+
+                                <label htmlFor="customerEmail">Customer Email:</label>
+                                <input type="email" value={bookingData.bookedServicesData[0].customerEmail} name="customerEmail" disabled />
+
+                                <label htmlFor="customerPhoneNumber">Customer Phone:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].customerPhoneNumber} name="customerPhoneNumber" disabled />
+
+                                <label htmlFor="customerName">Customer Name:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].customerName} name="customerName" disabled />
+
+                                <label htmlFor="serviceTitle">Service Title:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].serviceTitle} name="serviceTitle" disabled />
+
+                                <label htmlFor="transactionId">Transaction ID:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].transactionId} name="transactionId" disabled />
+
+                                <div className="date-picker-container">
+                                    <label htmlFor="selectedDateTime">Select Date and Time:</label>
+                                    <DatePicker
+                                        id="selectedDateTime"
+                                        name="selectedDateTime"
+                                        selected={selectedDateTime}
+                                        onChange={handleDateChange}
+                                        showTimeSelect
+                                        timeFormat="HH:mm"
+                                        timeIntervals={15}
+                                        dateFormat="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                                        minDate={new Date()}
+                                    />
+                                </div>
+
+                                <label htmlFor="customerTimezone">Customer Timezone:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].customerTimezone} name="customerTimezone" disabled />
+
+                                <label htmlFor="location">location:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].location} name="location" disabled />
+
+                                <label htmlFor="transactionStatus">Transaction Status:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].transactionStatus} name="transactionStatus" disabled />
+
+                                <label htmlFor="bookingStatus">Booking Status:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].bookingStatus} name="bookingStatus" disabled />
+
+                                <label htmlFor="meetingStartTime">Meeting Start:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].meetingStartTime} name="meetingStartTime" disabled />
+
+                                <label htmlFor="meetingEndTime">Meeting EndTime:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].meetingEndTime} name="meetingEndTime" disabled />
+
+                                <label htmlFor="correlationId">Correlation ID:</label>
+                                <input type="text" value={bookingData.bookedServicesData[0].correlationId} name="correlationId" disabled />
+
+                                <button className="btn">change schedule</button>
+                            </form>
+                        </div>
+                    )
                 }
             </div >
         </>

@@ -96,7 +96,7 @@ exports.findRemindersForBooking = async (req, res) => {
 //change booking time
 exports.rescheduleBooking = async (req, res) => {
     const { bookingId } = req.params;
-    const { newMeetingStartTime, rescheduledBy } = req.body;
+    const { newMeetingStartTime } = req.body;
 
     try {
         // Update booking details
@@ -106,7 +106,7 @@ exports.rescheduleBooking = async (req, res) => {
                 $set: {
                     'bookedServicesData.$.meetingStartTime': newMeetingStartTime,
                     'bookedServicesData.$.isRescheduled': true,
-                    'bookedServicesData.$.rescheduledBy': rescheduledBy,
+                    // 'bookedServicesData.$.rescheduledBy': rescheduledBy,
                 },
             },
             { new: true }
@@ -128,7 +128,7 @@ exports.rescheduleBooking = async (req, res) => {
         );
 
         if (!updatedReminder) {
-            return res.status(404).json({ message: `Booking with ID ${bookingId} not found.` });
+            return res.status(404).json({ message: `Booking with ID ${bookingId} yes not found.` });
         }
 
         return res.status(200).json({ updatedBooking, updatedReminder });
@@ -202,6 +202,7 @@ exports.updateNumberOfReminders = async (req, res) => {
 
 
 //sucess meeting
+
 exports.completeAppointment = async (req, res) => {
     const { bookingId } = req.params;
 
@@ -238,3 +239,75 @@ exports.completeAppointment = async (req, res) => {
     }
 }
 
+exports.newAppointment = async (req, res) => {
+    try {
+        const {
+            usernameDoctor,
+            accId,
+            doctorEmail,
+            doctorTimezone,
+            bookingId,
+            orderId,
+            customerEmail,
+            customerPhoneNumber,
+            customerName,
+            serviceTitle,
+            transactionId,
+            selectedDateTime,
+            customerTimezone,
+            location,
+            correlationId,
+        } = req.body;
+
+        // Other validations and error handling can be added here
+
+        // Create a new appointment object
+        const newAppointmentData = {
+            usernameDoctor,
+            accId,
+            doctorEmail,
+            doctorTimezone,
+            bookedServicesData: [{
+                bookingId,
+                orderId,
+                customerEmail,
+                customerPhoneNumber,
+                customerName,
+                serviceTitle,
+                transactionId,
+                datetime: selectedDateTime,
+                customerTimezone,
+                location,
+                correlationId,
+            }],
+        };
+        //console.log(req.parsedFormData);
+
+        // Save the new appointment data to the database
+        const createdAppointment = await BookingDetails.create(newAppointmentData);
+
+        // Create a reminder for the scheduled meeting
+        const { bookingId: createdBookingId, customerEmail: createdCustomerEmail } = createdAppointment.bookedServicesData[0];
+
+        const newReminderData = {
+            bookingId: createdBookingId,
+            BookingTime: selectedDateTime,
+            doctorEmail,
+            customerEmail: createdCustomerEmail,
+            numberOfReminders: 0,
+            lastReminderSentTime: null,
+            isReminderSuccessful: false,
+        };
+
+        await Reminder.create(newReminderData);
+
+        return res.status(201).json({
+            message: 'Appointment and reminder created successfully',
+            appointment: createdAppointment,
+            reminder: newReminderData,
+        });
+    } catch (error) {
+        console.error('Error creating new appointment and reminder:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
