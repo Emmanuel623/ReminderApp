@@ -7,8 +7,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from 'date-fns';
 
-//axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
-axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
+//axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
 
