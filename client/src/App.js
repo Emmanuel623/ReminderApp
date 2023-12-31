@@ -147,6 +147,10 @@ function App() {
         } catch (error) {
             console.error('Error:', error);
         }
+        Getbookings();
+        Getreminders();
+        Getdoctors();
+        Getcustumers();
     };
     const Canceled = async (bookingId) => {
         try {
@@ -155,6 +159,10 @@ function App() {
         } catch (error) {
             console.error('Error:', error);
         }
+        Getbookings();
+        Getreminders();
+        Getdoctors();
+        Getcustumers();
     };
 
 
@@ -197,6 +205,10 @@ function App() {
         setRemind(false);
         setviewSection(false)
         setEditSection(false);
+        Getbookings();
+        Getreminders();
+        Getdoctors();
+        Getcustumers();
     }
 
     function bookingclick() {
@@ -452,9 +464,9 @@ function App() {
                                 <div className="addcontainer" >
                                     <form>
                                         <div>
-                                            <div className="btn" onClick={() => reschedule(bookingData.bookedServicesData[0].bookingId)}>Reschedule</div>
-                                            <div className="btn" onClick={() => Success(bookingData.bookedServicesData[0].bookingId)}>success</div>
-                                            <div className="btn" onClick={() => Canceled(bookingData.bookedServicesData[0].bookingId)}>Cancel</div>
+                                            <div className="btnnew" onClick={() => reschedule(bookingData.bookedServicesData[0].bookingId)}>Reschedule</div>
+                                            <div className="btnnew green" onClick={() => Success(bookingData.bookedServicesData[0].bookingId)}>complete</div>
+                                            <div className="btnnew red" onClick={() => Canceled(bookingData.bookedServicesData[0].bookingId)}>Cancel</div>
                                         </div>
                                         <div className="close-btn" onClick={() => closeviewclick()}><MdClose /></div>
                                         <label htmlFor="bookingId">Booking ID:</label>
@@ -572,7 +584,7 @@ function App() {
                                 <label htmlFor="location">location:</label>
                                 <input type="text" value={bookingData.bookedServicesData[0].location} name="location" disabled />
 
-                                <button className="btn">change schedule</button>
+                                <button className="btnnew">Confirm Change schedule</button>
                             </form>
                         </div>
                     )
