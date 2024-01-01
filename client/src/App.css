@@ -1,49 +1,27 @@
 /* Add this to your CSS stylesheet */
-* {
-  font-size: 105%;
-}
-
-.nav-list {
-  list-style: none;
-  display: flex;
-  /* background-image: url('https://img.freepik.com/free-psd/abstract-blur-luxury-hospital-corridor-generative-ai_587448-1984.jpg'); */
-  justify-content: center;
-  align-items: center;
-}
-
-.nav-item {
-  font-size: x-large;
-}
-
 body {
   background-color: rgb(63, 61, 61);
   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTguShE9XkKwMf1hobBC8AwlK8hd35L_XMIHg&usqp=CAU');
-
 }
 
 .container {
-  padding: 1%;
   background-color: rgb(37, 35, 35);
-  max-width: 100%;
   overflow-y: auto;
   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTguShE9XkKwMf1hobBC8AwlK8hd35L_XMIHg&usqp=CAU');
-  width: max-content;
+  width: auto;
+  text-align: center;
 }
 
 .btn {
   display: inline-block;
   padding: 15px 20px;
-  /* Adjust the padding to make the buttons larger */
   background-color: #addaf8;
-  /* Choose your preferred background color */
   color: #090909;
-  /* Choose your preferred text color */
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   border-radius: 5px;
   margin: 10px;
-  /* Add rounded corners */
   transition: background-color 0.3s ease;
 }
 
@@ -113,6 +91,11 @@ body {
   font-size: 18px;
 }
 
+img {
+  height: 5%;
+  width: 5%;
+}
+
 /* Base styling for the table */
 
 
@@ -127,6 +110,7 @@ body {
 
 .tableContainer table tbody tr {
   background-color: aquamarine;
+  border: solid;
 }
 
 .tableContainer table thead tr th,
@@ -134,41 +118,7 @@ body {
   padding: 1%;
   overflow-x: auto;
   scroll-behavior: hidden;
-}
 
-/* Responsive styling using media queries */
-@media screen and (max-width: 768px) {
-
-  .tableContainer table thead tr th,
-  .tableContainer table tbody tr td {
-    /* Reset the minimum width for smaller screens */
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .container {
-    width: 100%;
-  }
-}
-
-/* Responsive styling using media queries */
-@media screen and (max-width: 768px) {
-  .nav-list {
-    flex-direction: column;
-    /* Change to a vertical layout on smaller screens */
-    gap: 0px;
-    /* Adjust the gap for better spacing in the vertical layout */
-    align-items: flex-start;
-    /* Center the items in the vertical layout */
-  }
-
-  .btn {
-    width: 100%;
-    /* Make the buttons take up the full width in the vertical layout */
-    margin-bottom: 5px;
-    /* Add some bottom margin for better spacing */
-  }
 }
 
 .date-picker-container {
@@ -177,31 +127,100 @@ body {
   align-items: center;
 }
 
-/* Apply different styles for screens with a max-width of 768 pixels */
-@media (max-width: 768px) {
+/* Responsive styling using media queries */
+
+
+.footer {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  position: relative;
+}
+
+.header {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 1%;
+}
+
+nav ul li {
+  display: inline;
+  margin: 1rem;
+  font-size: large;
+  list-style-type: none;
+  cursor: pointer;
+}
+
+table {
+  height: auto;
+}
+
+nav {
+  text-align: left;
+}
+
+@media screen and (max-width: 500px) {
+
+  .tableContainer table thead tr th,
+  .tableContainer table tbody tr td {
+    /* Reset the minimum width for smaller screens */
+    display: block;
+    width: auto;
+    box-sizing: border-box;
+  }
+
+  .container {
+    position: relative;
+    width: auto;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
   .date-picker-container {
     flex-direction: column;
-    /* Stack items vertically */
     align-items: flex-start;
-    /* Align items to the start of the container */
     padding: 15px;
-    /* Add some padding for better spacing */
     border: 1px solid #ccc;
-    /* Add a border for a neat appearance */
     border-radius: 8px;
-    /* Add border radius for rounded corners */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* Add a subtle box shadow for depth */
   }
 
   #selectedDateTime {
     width: 100%;
-    /* Make the input field full width */
     box-sizing: border-box;
-    /* Include padding and border in the width calculation */
     overflow-x: auto;
-    /* Add horizontal scroll if content overflows */
     max-width: 200px;
-    /* Set a maximum width to trigger overflow */
   }
+
+  .flex-show {
+    display: grid;
+    grid-auto-flow: column;
+  }
+
+  li img {
+    height: 60px;
+    width: 60px;
+  }
+
+  ul {
+    display: inline-grid;
+    padding: 0;
+  }
+
+  .header {
+    height: auto;
+    width: auto;
+  }
+
+  nav ul li {
+    font-size: large;
+    margin: 0;
+    margin-bottom: 40%;
+  }
+
 }
