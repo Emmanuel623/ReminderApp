@@ -48,6 +48,7 @@ router.put('/api/reminders/:bookingId', updateNumberOfReminders);//working
 router.put('/api/booking-details/:bookingId', completeAppointment, completed);//working
 
 //creating new appointment
+// router.post('/api/booking-details', newAppointment, newAppointmentmail);//working
 router.post('/api/booking-details', newAppointment, newAppointmentmail);//working
 
 

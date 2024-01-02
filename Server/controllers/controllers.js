@@ -1,5 +1,6 @@
 
 const { BookingDetails, Reminder } = require('../models/models');
+const { v4: uuidv4 } = require('uuid');
 
 //find all users
 exports.findAllDetails = async (req, res) => {
@@ -261,25 +262,27 @@ exports.completeAppointment = async (req, res, next) => {
 
 exports.newAppointment = async (req, res, next) => {
     try {
+
+        const uuid1 = uuidv4();
+        const uuid = uuid1.substring(0, 8);
+        const bookingId = "B" + uuid;
+        const orderId = "O" + uuid;
+        const correlationId = "C" + uuid;
+        const transactionId = "T" + uuid;
         const {
-            usernameDoctor,
             accId,
+            usernameDoctor,
             doctorEmail,
             doctorTimezone,
-            bookingId,
-            orderId,
             customerEmail,
             customerPhoneNumber,
             customerName,
             serviceTitle,
-            transactionId,
             selectedDateTime,
             customerTimezone,
             location,
-            correlationId,
         } = req.body;
 
-        // Other validations and error handling can be added here
 
         // Create a new appointment object
         const newAppointmentData = {
@@ -301,9 +304,8 @@ exports.newAppointment = async (req, res, next) => {
                 correlationId,
             }],
         };
-        //console.log(req.parsedFormData);
+        console.log(req.newAppointmentData);
 
-        // Save the new appointment data to the database
         const createdAppointment = await BookingDetails.create(newAppointmentData);
 
         // Create a reminder for the scheduled meeting

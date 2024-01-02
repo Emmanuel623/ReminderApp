@@ -43,7 +43,7 @@ function App() {
 
         try {
             const response = await axios.post('/api/booking-details', data);
-            alert(response.data.message)
+            alert(response.formData.message)
         } catch (error) {
             console.error('Error:', error);
         }
@@ -295,12 +295,6 @@ function App() {
                                 <label htmlFor="doctorTimezone">Doctor Timezone:</label>
                                 <input type="text" id="doctorTimezone" name="doctorTimezone" required />
 
-                                <label htmlFor="bookingId">Booking ID:</label>
-                                <input type="text" id="bookingId" name="bookingId" required />
-
-                                <label htmlFor="orderId">Order ID:</label>
-                                <input type="text" id="orderId" name="orderId" required />
-
                                 <label htmlFor="customerEmail">Customer Email:</label>
                                 <input type="email" id="customerEmail" name="customerEmail" required />
 
@@ -312,9 +306,6 @@ function App() {
 
                                 <label htmlFor="serviceTitle">Service Title:</label>
                                 <input type="text" id="serviceTitle" name="serviceTitle" required />
-
-                                <label htmlFor="transactionId">Transaction ID:</label>
-                                <input type="text" id="transactionId" name="transactionId" required />
 
                                 <div className="date-picker-container">
                                     <label htmlFor="selectedDateTime">Select Date and Time:</label>
@@ -336,9 +327,6 @@ function App() {
 
                                 <label htmlFor="country">location:</label>
                                 <input type="text" id="location" name="location" required />
-
-                                <label htmlFor="correlationId">Correlation ID:</label>
-                                <input type="text" id="correlationId" name="correlationId" required />
 
                                 <button className="btn">Add Appointment</button>
                             </form>
