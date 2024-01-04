@@ -10,12 +10,13 @@ body {
   margin: 0;
   padding: 0;
   background-color: rgb(92, 82, 82);
+  font-style: cursive;
 }
 
 .Sidebar {
   height: 100%;
   width: 15%;
-  background-color: rgb(45, 49, 49);
+  background-color: rgb(13 91 133);
 }
 
 ul {
@@ -67,13 +68,23 @@ ul {
 .header {
   width: 100%;
   height: 10vh;
-  background-color: rgb(45, 49, 49);
+  background-color: rgb(13 91 133);
+  font-size: larger;
+  color: wheat;
+  text-align-last: center;
+  text-transform: uppercase;
 }
 
 .footer {
+  justify-content: center;
   width: 100%;
-  height: 10vh;
-  background-color: rgb(45, 49, 49);
+  height: max-content;
+  background-color: rgb(13 91 133);
+  font-size: larger;
+  color: wheat;
+  text-align-last: center;
+  text-transform: uppercase;
+
 }
 
 .centerpart {
@@ -98,7 +109,7 @@ ul {
 /* no css */
 
 .container {
-  background-color: rgb(37, 35, 35);
+  background-color: rgb(23, 28, 31);
   overflow-y: auto;
   width: auto;
   text-align: center;
@@ -231,6 +242,13 @@ table {
     box-sizing: border-box;
   }
 
+  .sidebarlist .row {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: small;
+  }
+
   .container {
     position: relative;
     width: auto;
@@ -289,8 +307,9 @@ table {
 }
 
 .top img {
-  width: 100%;
+  width: 90%;
   height: auto;
+  padding-top: 20px;
 }
 
 .para {
@@ -307,13 +326,13 @@ table {
 
 .image-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
 }
 
 .image-container img {
   padding: 10px;
-  width: 50vh;
-  height: 35vh;
+  width: 60%;
+  height: auto;
   border-radius: 5vh;
 }

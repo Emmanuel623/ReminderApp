@@ -7,13 +7,13 @@ import axios, { AxiosError } from "axios"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaHome } from "react-icons/fa";
-import { AiFillAmazonCircle } from "react-icons/ai";
-import { GrTree } from "react-icons/gr";
-import { MdDashboard } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
+import { FaUserDoctor } from "react-icons/fa6";
+import { HiBellAlert } from "react-icons/hi2";
+import { MdOutlineBorderColor } from "react-icons/md";
 
-
-axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
-//axios.defaults.baseURL = "http://localhost:8080";
+//axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
+axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
 
@@ -64,7 +64,9 @@ function App() {
             e.target.accId.value = singledoctor.accId;
             e.target.doctorEmail.value = singledoctor.doctorEmail;
             e.target.doctorTimezone.value = singledoctor.doctorTimezone;
-
+            Getbookings();
+            Getreminders();
+            Getcustumers();
         } catch (error) {
             console.error('Error:', error);
         }
@@ -293,12 +295,22 @@ function App() {
         setviewSection(false)
         setAddSection(false);
     }
-
+    function closeAddbutton() {
+        setHomeSection(false);
+        setEditSection(false);
+        setBooking(false);
+        setDoctor(true);
+        setCustomer(false);
+        setReminder(false);
+        setRemind(false);
+        setviewSection(false)
+        setAddSection(false);
+    }
     return (
         <>
             <div className='main'>
                 <div className='header'>
-
+                    This Website is designed By Emmanuel Abhilash
                 </div>
                 <div className='centerpart'>
                     <div className='Sidebar'>
@@ -309,23 +321,23 @@ function App() {
                                 <div id="title">Home</div>
                             </li>
                             <li className='row'
-                                onClick={() => bookingclick()}>
-                                <div id="icon"><FaHome /></div>
-                                <div id="title">Bookings</div>
-                            </li>
-                            <li className='row'
                                 onClick={() => doctorclick()}>
-                                <div id="icon"><AiFillAmazonCircle /></div>
+                                <div id="icon"><FaUserDoctor /></div>
                                 <div id="title">Doctors</div>
                             </li>
                             <li className='row'
+                                onClick={() => bookingclick()}>
+                                <div id="icon"><MdOutlineBorderColor /></div>
+                                <div id="title">Bookings</div>
+                            </li>
+                            <li className='row'
                                 onClick={() => customerclick()}>
-                                <div id="icon"><GrTree /></div>
+                                <div id="icon"><FaUsers /></div>
                                 <div id="title">Customers</div>
                             </li>
                             <li className='row'
                                 onClick={() => Reminderclick()}>
-                                <div id="icon"><MdDashboard /></div>
+                                <div id="icon"><HiBellAlert /></div>
                                 <div id="title">Reminders</div>
                             </li>
                         </ul>
@@ -339,18 +351,20 @@ function App() {
                                             <img src="https://wallpapercave.com/wp/wp8463082.jpg" alt="Starting Image" />
                                             <div className="para">
                                                 <h1>Welcome to Doctor Website</h1>
-                                                <p>In this website we are listed specialist doctors you can choose a
-                                                    doctor and add appointment. I also elisted booking data in bookins section.
+                                                <p>In this website I have listed some doctors details ,  you can choose a
+                                                    doctor and add appointment. I also enlisted booking data in bookings section.
                                                     when a appointment is booked doctor and patient receives a mail.
-                                                    mails are also sent when appointment is Canceled , completed , or rescheduled.
-                                                    we have one more feature that doctorsand patients will recieve mails
-                                                    when appointmentis about 1 hr or 5 min as well.
+                                                    mails are also sent when appointment is canceled , completed , or rescheduled.
+                                                    we have one more feature that doctors and patients will recieve mails
+                                                    when appointment is about to happen 1 hr or 5 min before.
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="text">
-                                            <h2>Main Content Section</h2>
-                                            <p>Your main content goes here in a div or any suitable container.</p>
+                                            <h2>Instructions</h2>
+                                            <p>
+                                                Please give valid mail id so that you can recieve mail
+                                            </p>
                                         </div>
                                         <div className="image-container">
                                             <div>
@@ -373,7 +387,7 @@ function App() {
                                 <div className="addcontainer">
 
                                     <form onSubmit={handlesubmit}>
-                                        <div className="close-btn" onClick={() => setAddSection(false)}><MdClose /></div>
+                                        <div className="close-btn" onClick={() => closeAddbutton()}><MdClose /></div>
                                         <label htmlFor="usernameDoctor">Doctor Name:</label>
                                         <input type="text" id="usernameDoctor" value={singledoctor.usernameDoctor} name="usernameDoctor" disabled />
 
