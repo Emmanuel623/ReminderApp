@@ -193,11 +193,11 @@ ul {
 }
 
 .tableContainer table thead tr {
-  background-color: red;
+  background-color: grey;
 }
 
 .tableContainer table tbody tr {
-  background-color: aquamarine;
+  background-color: white;
   border: solid;
 }
 
@@ -256,5 +256,35 @@ table {
     box-sizing: border-box;
     overflow-x: auto;
     max-width: 200px;
+  }
+
+  .centerpart {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: relative;
+  }
+
+  .Sidebar {
+    width: 100%;
+    height: 20%;
+  }
+
+  .sidebarlist {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .content {
+    position: relative;
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+  }
+
+  .addcontainer form {
+    width: 100%;
+    align-items: start;
+    display: grid;
   }
 }

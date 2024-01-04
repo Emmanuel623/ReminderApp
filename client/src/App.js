@@ -299,6 +299,11 @@ function App() {
                                 <div id="title">Home</div>
                             </li>
                             <li className='row'
+                                onClick={() => bookingclick()}>
+                                <div id="icon"><FaHome /></div>
+                                <div id="title">Home</div>
+                            </li>
+                            <li className='row'
                                 onClick={() => doctorclick()}>
                                 <div id="icon"><AiFillAmazonCircle /></div>
                                 <div id="title">Home</div>
