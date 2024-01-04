@@ -1,5 +1,10 @@
 /* Add this to your CSS stylesheet */
 /* added sidebar css */
+*::-webkit-scrollbar {
+  width: 6px;
+  /* Set the width of the scrollbar */
+}
+
 .App {
   width: 100vw;
   height: 100vw;
