@@ -13,8 +13,8 @@ import { MdDashboard } from "react-icons/md";
 import { FaUserFriends } from "react-icons/fa";
 import { FaImages } from "react-icons/fa";
 
-//axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
-axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
+//axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
 
