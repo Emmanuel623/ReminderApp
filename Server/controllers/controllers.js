@@ -1,6 +1,7 @@
 
-const { BookingDetails, Reminder } = require('../models/models');
+const { BookingDetails, Reminder, DoctorsList } = require('../models/models');
 const { v4: uuidv4 } = require('uuid');
+const moment = require('moment');
 
 //find all users
 exports.findAllDetails = async (req, res) => {
@@ -51,10 +52,7 @@ exports.findAllCustomers = async (req, res) => {
 //find all doctors and there emails
 exports.findAllDoctors = async (req, res) => {
     try {
-        const doctors = await BookingDetails.find(
-            { 'doctorEmail': { $exists: true } },
-            { 'usernameDoctor': true, 'doctorEmail': true, _id: 0 }
-        );
+        const doctors = await DoctorsList.find();
         //console.log(doctors)
         return res.status(200).json({ doctors });
     } catch (error) {
@@ -189,31 +187,35 @@ exports.cancelBooking = async (req, res, next) => {
 
 
 //update reminder sent number of time 
-exports.updateNumberOfReminders = async (req, res) => {
-    const { bookingId } = req.params;
-
+exports.updateNumberOfReminders = async (id) => {
     try {
+        const currentTime = new Date();
+        const presentTime = new Date(currentTime.getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000);
         // Update reminder
-        const updatedReminder = await Reminder.findOneAndUpdate(
-            { bookingId },
+        const result = await Reminder.findOneAndUpdate(
+            { 'bookingId': id },
             {
                 $inc: {
-                    numberOfReminders: 1, // Increment the numberOfReminders field by 1
+                    'numberOfReminders': 1,
                 },
-            },
-            { new: true }
+                $set: {
+                    'isReminderSuccessful': true,
+                    'lastReminderSentTime': presentTime, // Set lastReminderSentTime to the current time
+                },
+            }
         );
-
-        if (!updatedReminder) {
-            return res.status(404).json({ message: `Reminder for booking with ID ${bookingId} not found.` });
+        //console.log(result);
+        if (!result) {
+            console.error(`Reminder for booking with ID ${id} not found.`);
         }
-
-        return res.status(200).json({ updatedReminder });
+        else {
+            console.log(`Reminder for booking with ID ${id} found and updated.`);
+        }
     } catch (error) {
         console.error('Error updating number of reminders:', error);
-        return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
 
 
 //sucess meeting
@@ -304,7 +306,7 @@ exports.newAppointment = async (req, res, next) => {
                 correlationId,
             }],
         };
-        console.log(req.newAppointmentData);
+        //console.log(req.newAppointmentData);
 
         const createdAppointment = await BookingDetails.create(newAppointmentData);
 
@@ -335,3 +337,26 @@ exports.newAppointment = async (req, res, next) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
+exports.getappointmentstime = async (time) => {
+    try {
+        const currentTime = new Date();
+        const presentTime = new Date(currentTime.getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000);
+        const futureTime = new Date(currentTime.getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000 + time * 60000); // Calculate future time
+
+        // Fetch upcoming bookings from the database
+        const upcomingBookings = await Reminder.find({
+            'BookingTime': {
+                $gte: presentTime,
+                $lte: futureTime,
+            },
+        });
+
+        //console.log(presentTime, futureTime);
+        return upcomingBookings;
+    } catch (error) {
+        console.error('Error fetching upcoming bookings:', error);
+        throw error;
+    }
+}

@@ -41,14 +41,10 @@ router.put('/api/reschedule/:bookingId', rescheduleBooking, rescheduled);//worki
 //cancelling booking 
 router.delete('/api/cancel/:bookingId', cancelBooking, cancelled);//working
 
-//update reminder sent when a reminder is succesfully sent
-router.put('/api/reminders/:bookingId', updateNumberOfReminders);//working
-
 //after apointmnet complete change appointmeents
 router.put('/api/booking-details/:bookingId', completeAppointment, completed);//working
 
 //creating new appointment
-// router.post('/api/booking-details', newAppointment, newAppointmentmail);//working
 router.post('/api/booking-details', newAppointment, newAppointmentmail);//working
 
 
