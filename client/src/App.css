@@ -100,7 +100,6 @@ ul {
 .container {
   background-color: rgb(37, 35, 35);
   overflow-y: auto;
-  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTguShE9XkKwMf1hobBC8AwlK8hd35L_XMIHg&usqp=CAU');
   width: auto;
   text-align: center;
 }
@@ -287,4 +286,34 @@ table {
     align-items: start;
     display: grid;
   }
+}
+
+.top img {
+  width: 100%;
+  height: auto;
+}
+
+.para {
+  justify-content: center;
+}
+
+.homesect {
+  color: wheat
+}
+
+.para p {
+  width: 100%;
+}
+
+.image-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.image-container img {
+  padding: 10px;
+  width: 50vh;
+  height: 35vh;
+  border-radius: 5vh;
 }

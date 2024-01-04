@@ -10,8 +10,7 @@ import { FaHome } from "react-icons/fa";
 import { AiFillAmazonCircle } from "react-icons/ai";
 import { GrTree } from "react-icons/gr";
 import { MdDashboard } from "react-icons/md";
-import { FaUserFriends } from "react-icons/fa";
-import { FaImages } from "react-icons/fa";
+
 
 axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
 //axios.defaults.baseURL = "http://localhost:8080";
@@ -20,13 +19,14 @@ function App() {
 
     //sections and there visibilities
     const [addsection, setAddSection] = useState(false);
-    const [bookingsection, setBooking] = useState(true);
+    const [bookingsection, setBooking] = useState(false);
     const [doctorsection, setDoctor] = useState(false);
     const [customersection, setCustomer] = useState(false);
     const [remindersection, setReminder] = useState(false);
     const [remindsection, setRemind] = useState(false);
     const [viewsection, setviewSection] = useState(false);
     const [editsection, setEditSection] = useState(false);
+    const [homesection, setHomeSection] = useState(true)
 
     //date
     const [selectedDateTime, setSelectedDateTime] = useState(null);
@@ -152,6 +152,7 @@ function App() {
         try {
             const response = await axios.put(`/api/booking-details/${bookingId}`);
             alert(response.data.message)
+            closeviewclick()
         } catch (error) {
             if (error.response.status == 404)
                 alert('Appointment already completed');
@@ -162,6 +163,7 @@ function App() {
         try {
             const response = await axios.delete(`/api/cancel/${bookingId}`);
             alert(response.data.message)
+            closeviewclick()
         } catch (error) {
             if (error.response.status == 404)
                 alert('Appointment already completed');
@@ -182,16 +184,19 @@ function App() {
     //handling  hidding buttons onclick
     async function veiwclick(id) {
         await Getbooking(id);
-        setAddSection(false);
+        setHomeSection(false);
+        setEditSection(false);
         setBooking(false);
         setDoctor(false);
         setCustomer(false);
         setReminder(false);
         setRemind(true);
-        setEditSection(false);
+        setviewSection(false)
+        setAddSection(false);
     }
     async function reschedule(id) {
         await Getbooking(id);
+        setHomeSection(false)
         setAddSection(false);
         setBooking(false);
         setDoctor(false);
@@ -203,31 +208,33 @@ function App() {
     async function addclick(id) {
         for (let i = 0; i < doctorsData.doctors.length; i++) {
             if (doctorsData.doctors[i].accId === id) {
-                //console.log(doctorsData.doctors[i]);
                 setDoctorData(doctorsData.doctors[i]);
             }
         }
+        setHomeSection(false)
         setAddSection(true);
         setBooking(false);
         setDoctor(false);
         setCustomer(false);
         setReminder(false);
         setRemind(false);
-        setviewSection(false)
+        setviewSection(false);
         setEditSection(false);
     }
 
     function bookingclick() {
+        setHomeSection(false)
         setAddSection(false);
         setBooking(true);
         setDoctor(false);
         setCustomer(false);
         setReminder(false);
-        setRemind(false)
-        setviewSection(false)
+        setRemind(false);
+        setviewSection(false);
         setEditSection(false);
     }
     function doctorclick() {
+        setHomeSection(false)
         setAddSection(false);
         setBooking(false);
         setDoctor(true);
@@ -238,6 +245,7 @@ function App() {
         setEditSection(false);
     }
     function customerclick() {
+        setHomeSection(false)
         setAddSection(false);
         setBooking(false);
         setDoctor(false);
@@ -248,6 +256,7 @@ function App() {
         setEditSection(false);
     }
     function Reminderclick() {
+        setHomeSection(false)
         setAddSection(false);
         setBooking(false);
         setDoctor(false);
@@ -258,14 +267,10 @@ function App() {
         setEditSection(false);
     }
     function closeviewclick() {
-        setAddSection(false);
         setBooking(true);
-        setDoctor(false);
-        setCustomer(false);
         setReminder(false);
         setRemind(false);
-        setviewSection(false)
-        setEditSection(false);
+        setHomeSection(false)
         Getbookings();
         Getreminders();
         Getcustumers();
@@ -273,15 +278,20 @@ function App() {
     function closeEditclick() {
         setEditSection(false);
         setBooking(true);
+        Getbookings();
+        Getreminders();
+        Getcustumers();
+    }
+    function openhome() {
+        setHomeSection(true);
+        setEditSection(false);
+        setBooking(false);
         setDoctor(false);
         setCustomer(false);
         setReminder(false);
         setRemind(false);
         setviewSection(false)
         setAddSection(false);
-        Getbookings();
-        Getreminders();
-        Getcustumers();
     }
 
     return (
@@ -294,34 +304,71 @@ function App() {
                     <div className='Sidebar'>
                         <ul className='sidebarlist'>
                             <li className='row'
-                                onClick={() => bookingclick()}>
+                                onClick={() => openhome()}>
                                 <div id="icon"><FaHome /></div>
                                 <div id="title">Home</div>
                             </li>
                             <li className='row'
                                 onClick={() => bookingclick()}>
                                 <div id="icon"><FaHome /></div>
-                                <div id="title">Home</div>
+                                <div id="title">Bookings</div>
                             </li>
                             <li className='row'
                                 onClick={() => doctorclick()}>
                                 <div id="icon"><AiFillAmazonCircle /></div>
-                                <div id="title">Home</div>
+                                <div id="title">Doctors</div>
                             </li>
                             <li className='row'
                                 onClick={() => customerclick()}>
                                 <div id="icon"><GrTree /></div>
-                                <div id="title">Home</div>
+                                <div id="title">Customers</div>
                             </li>
                             <li className='row'
                                 onClick={() => Reminderclick()}>
                                 <div id="icon"><MdDashboard /></div>
-                                <div id="title">Home</div>
+                                <div id="title">Reminders</div>
                             </li>
                         </ul>
                     </div>
                     <div className='content'>
                         <div className="container">
+                            {
+                                homesection && (
+                                    <div className="homesect">
+                                        <div className="top">
+                                            <img src="https://wallpapercave.com/wp/wp8463082.jpg" alt="Starting Image" />
+                                            <div className="para">
+                                                <h1>Welcome to Doctor Website</h1>
+                                                <p>In this website we are listed specialist doctors you can choose a
+                                                    doctor and add appointment. I also elisted booking data in bookins section.
+                                                    when a appointment is booked doctor and patient receives a mail.
+                                                    mails are also sent when appointment is Canceled , completed , or rescheduled.
+                                                    we have one more feature that doctorsand patients will recieve mails
+                                                    when appointmentis about 1 hr or 5 min as well.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="text">
+                                            <h2>Main Content Section</h2>
+                                            <p>Your main content goes here in a div or any suitable container.</p>
+                                        </div>
+                                        <div className="image-container">
+                                            <div>
+                                                <img src="https://static.vecteezy.com/system/resources/previews/005/307/230/non_2x/healthcare-and-medicine-concept-smart-medical-doctor-working-with-stethoscope-at-modern-hospital-free-photo.jpg" alt="Image 1" />
+                                                <p>Description for Image 1</p>
+                                            </div>
+                                            <div>
+                                                <img src="https://wallpapercave.com/wp/wp2968489.jpg" alt="Image 2" />
+                                                <p>Description for Image 2</p>
+                                            </div>
+                                            <div>
+                                                <img src="https://wallpapers.com/images/hd/doctor-crossing-arms-smxscfldh0j8iq9w.jpg" alt="Image 3" />
+                                                <p>Description for Image 3</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            }
                             {addsection && (
                                 <div className="addcontainer">
 
