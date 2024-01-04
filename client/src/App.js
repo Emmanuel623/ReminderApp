@@ -12,8 +12,8 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { HiBellAlert } from "react-icons/hi2";
 import { MdOutlineBorderColor } from "react-icons/md";
 
-//axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
-axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.baseURL = "https://reminderapp-backend.onrender.com";
+//axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
 
